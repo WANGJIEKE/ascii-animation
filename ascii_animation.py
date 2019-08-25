@@ -21,7 +21,10 @@ import shlex
 import time
 
 
-if sys.platform == 'win32':
+_is_windows = sys.platform == 'win32'
+_is_macos = sys.platform == 'darwin'
+
+if _is_windows:
     import winsound as ws
 
 
@@ -135,7 +138,7 @@ def images_to_ascii_frames(dir: str, ascii_mapping: str) -> List[List[str]]:
     :param ascii_mapping: ASCII mapping (index 0 is darkest)
     :return: corresponding ASCII frames
     """
-    return [image_to_ascii_frame(path, ascii_mapping) for path in tqdm(sorted(Path(dir).iterdir()))]
+    return [image_to_ascii_frame(path, ascii_mapping) for path in tqdm(sorted(Path(dir).iterdir()), ascii=_is_windows)]
 
 
 def save_data_to_pickle(path: str, frames: List[List[str]]) -> None:
@@ -169,21 +172,21 @@ def play_ascii_frames_with_sound(ascii_frames: List[List[str]], frame_rate: floa
     """
     frame_len = 1 / frame_rate
     start_time = time.time()
-    if sys.platform == 'win32':
+    if _is_windows:
         os.system('cls')
         ws.PlaySound(sound_file, ws.SND_FILENAME | ws.SND_ASYNC)
     else:
         os.system('clear')
-        if sys.platform == 'darwin':
+        if _is_macos:
             p = sp.Popen(['afplay', '-q', '1', sound_file])
     try:
         for frame in ascii_frames:
             # go to the row=1,col=1 cell
-            print('\x1b[;f' if sys.platform == 'win32' else '\033[1;1H', end='')
+            print('\x1b[;f' if _is_windows else '\033[1;1H', end='')
             print(*frame, sep='\n')
             time.sleep(frame_len - ((time.time() - start_time) % frame_len))
     finally:  # send SIGTERM to child process when finish
-        if sys.platform == 'darwin':
+        if _is_macos:
             p.terminate()
             p.wait()
 
