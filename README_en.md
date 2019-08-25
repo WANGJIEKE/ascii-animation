@@ -8,7 +8,7 @@ First, install FFmpeg. You can get it from its [official website](https://ffmpeg
 
 If you are on Windows, you may install it from [Chocolatey](https://chocolatey.org/) by typing `choco install ffmpeg`.
 
-If you are on macOS, you may install it from [HomeBrew](https://brew.sh/) by typing `brew install ffmpeg`.
+If you are on macOS, you may install it from [Homebrew](https://brew.sh/) by typing `brew install ffmpeg`.
 
 Then, type following commands
 
