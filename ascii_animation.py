@@ -176,15 +176,16 @@ def play_ascii_frames_with_sound(ascii_frames: List[List[str]], frame_rate: floa
     if sys.platform == 'win32':
         os.system('cls')
         ws.PlaySound(sound_file, ws.SND_FILENAME | ws.SND_ASYNC)
-        # TODO: implement loop for Windows
     else:
         os.system('clear')
-        p = sp.Popen(['afplay', '-q', '1', sound_file])
-        try:
-            for frame in ascii_frames:
-                print('\033[1;1H', end='')  # go to the row=1,col=1 cell
-                print(*frame, sep='\n')
-                time.sleep(
-                    frame_len - ((time.time() - start_time) % frame_len))
-        except KeyboardInterrupt:
+        if sys.platform == 'darwin':
+            p = sp.Popen(['afplay', '-q', '1', sound_file])
+    try:
+        for frame in ascii_frames:
+            print('\x1b[;f' if sys.platform == 'win32' else '\033[1;1H', end='')  # go to the row=1,col=1 cell
+            print(*frame, sep='\n')
+            time.sleep(
+                frame_len - ((time.time() - start_time) % frame_len))
+    except KeyboardInterrupt:
+        if sys.platform == 'darwin':
             p.terminate()

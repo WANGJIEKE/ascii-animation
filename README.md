@@ -6,6 +6,8 @@
 
 ## Get Started
 
+本程序使用Python 3.7版本，低于该版本可能会导致不兼容。程序在Windows 10 1903版本以及macOS Mojave 10.14.6版本测试通过。
+
 首先需要确保你的电脑上已经安装了FFmpeg，如果没有安装的话可以前往[官网](https://ffmpeg.org/)下载。
 
 如果你是Windows用户，你也可以通过[Chocolatey](https://chocolatey.org/)来安装。首先安装Chocolatey，然后在命令提示符（或PowerShell）中输入`choco install ffmpeg`进行安装。

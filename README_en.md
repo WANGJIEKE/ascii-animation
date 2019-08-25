@@ -4,6 +4,8 @@ Easily convert your video into ASCII art animation.
 
 ## Get Started
 
+This program is written in Python 3.7. Tested on Windows 10 1903 and macOS Mojave 10.14.6.
+
 First, install FFmpeg. You can get it from its [official website](https://ffmpeg.org/).
 
 If you are on Windows, you may install it from [Chocolatey](https://chocolatey.org/) by typing `choco install ffmpeg`.
