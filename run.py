@@ -15,12 +15,13 @@ FRAMES_OUTPUT_SIZE = (-1, 160)  # see ffmpeg docs (https://trac.ffmpeg.org/wiki/
 
 PICKLE_OUTPUT_FILE = 'chika.pickle'
 
+# Notice that left side is for dark color and right side is for bright color
 # ASCII_MAPPING = """$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,"^`'. """
 ASCII_MAPPING = '@%#*+=-:. '  # I think this mapping is actually better
 FFMPEG_EXECUTABLE_PATH = 'ffmpeg'  # ffmpeg executable path
 FFPROB_EXECUTABLE_PATH = 'ffprob'  # ffprob executable path
 
-BUILDING = True  # if you to build the pickle file, set it to True
+BUILDING = True  # if you want to build the pickle file, set it to True
 RUNNING = True  # if you want to load existed file, set it to True
 # set thses two to both True to first build then run
 
