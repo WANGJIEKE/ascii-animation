@@ -1,4 +1,11 @@
-# Author: WANGJIEKE
+"""ASCII Animation
+
+Easily convert your video into ASCII art animation.
+
+See run.py in the same directory for usage.
+I'm going to add a complete command line interface later.
+"""
+
 
 from typing import Optional, Tuple, List, Dict, Union
 from pathlib import Path
@@ -12,17 +19,14 @@ import sys
 import shutil
 import shlex
 import time
-import threading
-import json
-import time
+
 
 if sys.platform == 'win32':
     import winsound as ws
 
 
 def get_frame_rate(file: str, ffprobe: str) -> float:
-    """
-    Get the frame rate of the given video using `ffprobe`
+    """Get the frame rate of the given video using `ffprobe`
 
     :param file: path to the video
     :param ffmpeg: path to `ffprobe` executable
@@ -42,8 +46,7 @@ def get_frame_rate(file: str, ffprobe: str) -> float:
 
 
 def change_frame_rate(src: str, dst: str, new_fps: int, ffmpeg: str) -> None:
-    """
-    Change the frame rate of the given video
+    """Change the frame rate of the given video
 
     :param src: source video
     :param dst: output video w/ new frame rate (recommend to use mp4 format)
@@ -60,8 +63,7 @@ def change_frame_rate(src: str, dst: str, new_fps: int, ffmpeg: str) -> None:
 
 
 def extract_audio(src: str, dst: str, ffmpeg: str) -> None:
-    """
-    Extract audio from video
+    """Extract audio from video
 
     :param src: source video
     :param dst: output audio
@@ -83,8 +85,7 @@ def extract_grayscale_frames(
     new_size: Tuple[int, int],
     ffmpeg: str
 ) -> None:
-    """
-    Extract all frames from given video files and store them to given directory
+    """Extract all frames from given video files and store them to given directory
 
     :param src: source video
     :param dst_dir: output directory
@@ -103,8 +104,7 @@ def extract_grayscale_frames(
 
 
 def grayscale256_to_ascii(val: int, ascii_mapping: str) -> str:
-    """
-    Map grayscale value (which is in range(256)) to given ASCII mapping
+    """Map grayscale value (which is in range(256)) to given ASCII mapping
 
     :param val: grayscale value
     :param ascii_mapping: ASCII mapping (index 0 is darkest)
@@ -114,8 +114,7 @@ def grayscale256_to_ascii(val: int, ascii_mapping: str) -> str:
 
 
 def image_to_ascii_frame(file: str, ascii_mapping: str) -> List[str]:
-    """
-    Convert single image to a list of ASCII character strings
+    """Convert single image to a list of ASCII character strings
 
     :param file: image file path
     :param ascii_mapping: ASCII mapping (index 0 is darkest)
@@ -140,8 +139,7 @@ def images_to_ascii_frames(dir: str, ascii_mapping: str) -> List[List[str]]:
 
 
 def save_data_to_pickle(path: str, frames: List[List[str]]) -> None:
-    """
-    Store converted ASCII frames using pickle so that next time you needn't to convert it again
+    """Store converted ASCII frames using pickle so that next time you needn't to convert it again
 
     :param path: pickle file path
     :param frames: ASCII frames
@@ -151,8 +149,7 @@ def save_data_to_pickle(path: str, frames: List[List[str]]) -> None:
 
 
 def load_data_from_pickle(path) -> List[List[str]]:
-    """
-    Load ASCII frames from pickle
+    """Load ASCII frames from pickle
 
     :param path: pickle file path
     :return: ASCII frames
@@ -162,10 +159,9 @@ def load_data_from_pickle(path) -> List[List[str]]:
 
 
 def play_ascii_frames_with_sound(ascii_frames: List[List[str]], frame_rate: float, sound_file: str) -> None:
-    """
-    Play ASCII frames with sound extracted from the video
+    """Play ASCII frames with sound extracted from the video
 
-    Warning: the sound is not supported in Linux yet (I don't have any Linux device that can make a sound)
+    Sound is not supported in Linux yet (I don't have any Linux device that can make a sound)
 
     :param ascii_frames: ASCII frames
     :param frame_rate: the fps of ASCII frames
@@ -182,10 +178,13 @@ def play_ascii_frames_with_sound(ascii_frames: List[List[str]], frame_rate: floa
             p = sp.Popen(['afplay', '-q', '1', sound_file])
     try:
         for frame in ascii_frames:
-            print('\x1b[;f' if sys.platform == 'win32' else '\033[1;1H', end='')  # go to the row=1,col=1 cell
+            # go to the row=1,col=1 cell
+            print('\x1b[;f' if sys.platform == 'win32' else '\033[1;1H', end='')
             print(*frame, sep='\n')
-            time.sleep(
-                frame_len - ((time.time() - start_time) % frame_len))
-    except KeyboardInterrupt:
+            time.sleep(frame_len - ((time.time() - start_time) % frame_len))
+    finally:  # send SIGTERM to child process when finish
         if sys.platform == 'darwin':
             p.terminate()
+            p.wait()
+
+__author__ = 'WANGJIEKE'
