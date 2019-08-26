@@ -44,6 +44,7 @@ if BUILDING:
 if RUNNING and not BUILDING:
     ascii_frames = aa.load_data_from_pickle(PICKLE_OUTPUT_FILE)
 
-aa.play_ascii_frames_with_sound(ascii_frames, frame_rate, SOUND_OUTPUT_FILE)
+if RUNNING:
+    aa.play_ascii_frames_with_sound(ascii_frames, frame_rate, SOUND_OUTPUT_FILE)
 
 __author__ = 'WANGJIEKE'
