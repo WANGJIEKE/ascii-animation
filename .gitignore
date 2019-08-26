@@ -1,3 +1,4 @@
+# gitignore for root directory
 .vscode
 .DS_Store
 .idea

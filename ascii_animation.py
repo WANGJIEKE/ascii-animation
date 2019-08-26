@@ -185,7 +185,7 @@ def play_ascii_frames_with_sound(ascii_frames: List[List[str]], frame_rate: floa
     try:
         for frame in ascii_frames:
             # go to the row=1,col=1 cell
-            print('\x1b[;f' if _is_windows else '\033[1;1H', end='')
+            print('\x1b[;H', end='')
             print(*frame, sep='\n')
             time.sleep(frame_len - ((time.time() - start_time) % frame_len))
     finally:  # send SIGTERM to child process when finish
