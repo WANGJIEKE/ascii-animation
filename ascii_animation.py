@@ -144,14 +144,14 @@ def images_to_ascii_frames(dir: Path, ascii_mapping: str) -> List[List[str]]:
     return [image_to_ascii_frame(path, ascii_mapping) for path in tqdm(sorted(dir.iterdir()), ascii=_is_windows)]
 
 
-def save_data_to_json(path: Union[Path, str], frames: List[List[str]]) -> None:
+def save_data_to_json(path: Union[Path, str], frames: List[List[str]], frame_rate: float) -> None:
     """Store converted ASCII frames using JSON so that next time you needn't to convert it again
 
     :param path: JSON file path
     :param frames: ASCII frames
     """
     with open(path, 'w') as file:
-        json.dump({'frames': frames}, file)
+        json.dump({'frames': frames, 'frame_rate': frame_rate}, file)
 
 
 def load_data_from_json(path: Union[Path, str]) -> Dict[str, Any]:
@@ -260,7 +260,7 @@ if __name__ == "__main__":
                 args.overwrite_existing_files
             )
             frames = images_to_ascii_frames(frames_output_directory, params['ascii_mapping'])
-            save_data_to_json(json_output_file, frames)
+            save_data_to_json(json_output_file, frames, frame_rate)
 
         if args.is_running:
             if not args.is_building:
