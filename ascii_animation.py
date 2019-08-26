@@ -195,6 +195,12 @@ def play_ascii_frames_with_sound(ascii_frames: List[List[str]], frame_rate: floa
 
 
 def _ensure_directories_exist(path_str: str, is_dir: bool) -> Path:
+    """Ensure given path's parents are existed
+
+    :param path_str: path
+    :param is_dir: bool indicating if path is a directory
+    :return: a corresponding Path object
+    """
     p = Path(path_str)
     if is_dir:
         p.mkdir(parents=True, exist_ok=True)
