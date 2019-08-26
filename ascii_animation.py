@@ -172,14 +172,14 @@ def play_ascii_frames_with_sound(ascii_frames: List[List[str]], frame_rate: floa
     """
     frame_len = 1 / frame_rate
     start_time = time.time()
-    if _is_windows:
-        os.system('cls')
-        ws.PlaySound(sound_file, ws.SND_FILENAME | ws.SND_ASYNC)
-    else:
-        os.system('clear')
-        if _is_macos:
-            p = sp.Popen(['afplay', '-q', '1', sound_file])
     try:
+        if _is_windows:
+            os.system('cls')
+            ws.PlaySound(sound_file, ws.SND_FILENAME | ws.SND_ASYNC)
+        else:
+            os.system('clear')
+            if _is_macos:
+                p = sp.Popen(['afplay', '-q', '1', sound_file])
         for frame in ascii_frames:
             # go to the row=1,col=1 cell
             print('\x1b[;f' if _is_windows else '\033[1;1H', end='')

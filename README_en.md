@@ -2,6 +2,12 @@
 
 Easily convert your video into ASCII art animation.
 
+## Features
+
+- Generate ASCII art animation from any FFmpeg-supported video
+- Customizable output framerate and size
+- Synchronized audio supported
+
 ## Get Started
 
 This program is written in Python 3.7. Tested on Windows 10 1903 and macOS Mojave 10.14.6.
