@@ -32,6 +32,7 @@ frame_rate = aa.get_frame_rate(INPUT_FILE, FFPROB_EXECUTABLE_PATH)
 if CUSTOM_FPS:
     frame_rate = 12  # your custom fps here
     aa.change_frame_rate(INPUT_FILE, f'{INPUT_FILE}.{frame_rate}fps.mp4', frame_rate, FFMPEG_EXECUTABLE_PATH)
+    INPUT_FILE = f'{INPUT_FILE}.{frame_rate}fps.mp4'  # use video w/ new fps as new input file
 
 if BUILDING:
     aa.extract_audio(INPUT_FILE, SOUND_OUTPUT_FILE, FFMPEG_EXECUTABLE_PATH)
