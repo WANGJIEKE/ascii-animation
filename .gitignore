@@ -1,12 +1,8 @@
-*.mp4
-*.flv
-*.avi
-*.wav
-*.frames
 .vscode
 .DS_Store
 .idea
 __pycache__
 *.pyc
-*.pickle
-*.self.py
+*.json
+!config.template.json
+.assets/
