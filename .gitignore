@@ -6,4 +6,4 @@ __pycache__
 *.pyc
 *.json
 !config.template.json
-.assets/
+test/
