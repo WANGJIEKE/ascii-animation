@@ -100,7 +100,7 @@ def extract_grayscale_frames(
     :param ffmpeg: ffmpeg executable path
     """
     cmd = f'{ffmpeg} {"-y" if overwrite_exist else ""} -i {src} -vf scale={new_size[0]}:{new_size[1]},' \
-        f'format=gray {dst_dir.resolve(strict=True) / src.name}_frame_%04d.{output_format}'
+        f'format=gray {dst_dir.resolve(strict=True) / src.name}_frame_%05d.{output_format}'
     print(f'[Info] executing "{cmd}"')
     p = sp.Popen(shlex.split(cmd))
     p.wait()
