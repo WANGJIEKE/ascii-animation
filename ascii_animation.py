@@ -37,7 +37,7 @@ def get_frame_rate(file: Path, ffprobe: str) -> float:
     :param ffmpeg: path to `ffprobe` executable
     :return: frame rate of the video
     """
-    cmd = f'ffprobe -of csv=p=0 -select_streams v:0 -show_entries stream=r_frame_rate {file}'
+    cmd = f'ffprobe -of csv=p=0 -select_streams v:0 -show_entries stream=r_frame_rate "{file}"'
     print(f'[Info] executing "{cmd}"')
     p = sp.Popen(shlex.split(cmd), stdout=sp.PIPE, stderr=sp.PIPE)
     p.wait()
@@ -58,7 +58,7 @@ def change_frame_rate(src: Path, dst: Path, new_fps: int, ffmpeg: str, overwrite
     :param new_fps: new frame rate
     :param ffmpeg: ffmpeg executable path
     """
-    cmd = f'{ffmpeg} {"-y" if overwrite_exist else ""} -i {src} -filter:v fps=fps={new_fps} {dst}'
+    cmd = f'{ffmpeg} {"-y" if overwrite_exist else ""} -i "{src}" -filter:v fps=fps={new_fps} "{dst}"'
     print(f'[Info] executing "{cmd}"')
     p = sp.Popen(shlex.split(cmd))
     p.wait()
@@ -74,7 +74,7 @@ def extract_audio(src: Path, dst: Path, ffmpeg: str, overwrite_exist: Optional[b
     :param dst: output audio
     :param ffmpeg: ffmpeg executable path
     """
-    cmd = f'{ffmpeg} {"-y" if overwrite_exist else ""} -i {src} -map a:0 {dst}'
+    cmd = f'{ffmpeg} {"-y" if overwrite_exist else ""} -i "{src}" -map a:0 "{dst}"'
     print(f'[Info] executing "{cmd}"')
     p = sp.Popen(shlex.split(cmd))
     p.wait()
@@ -99,8 +99,8 @@ def extract_grayscale_frames(
     :param new_size: new resolution for frames (using ffmpeg-style size)
     :param ffmpeg: ffmpeg executable path
     """
-    cmd = f'{ffmpeg} {"-y" if overwrite_exist else ""} -i {src} -vf scale={new_size[0]}:{new_size[1]},' \
-        f'format=gray {dst_dir.resolve(strict=True) / src.name}_frame_%05d.{output_format}'
+    cmd = f'{ffmpeg} {"-y" if overwrite_exist else ""} -i "{src}" -vf scale={new_size[0]}:{new_size[1]},' \
+        f'format=gray "{dst_dir.resolve(strict=True) / src.name}_frame_%05d.{output_format}"'
     print(f'[Info] executing "{cmd}"')
     p = sp.Popen(shlex.split(cmd))
     p.wait()
