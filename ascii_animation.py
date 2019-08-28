@@ -116,7 +116,7 @@ def grayscale256_to_ascii(val: int, ascii_mapping: str) -> str:
     :param ascii_mapping: ASCII mapping (index 0 is darkest)
     :return: corresponding ASCII character
     """
-    return ascii_mapping[int((len(ascii_mapping) - 1) * val / 256)]
+    return ascii_mapping[round(val / 255 * (len(ascii_mapping) - 1))]
 
 
 def image_to_ascii_frame(file: Path, ascii_mapping: str) -> List[str]:
@@ -174,14 +174,15 @@ def play_ascii_frames_with_sound(ascii_frames: List[List[str]], frame_rate: floa
     :param sound_file: path to the sound file
     """
     frame_len = 1 / frame_rate
-    start_time = time.time()
     if _is_windows:
         os.system('cls')
         ws.PlaySound(sound_file, ws.SND_FILENAME | ws.SND_ASYNC)
     else:
         os.system('clear')
         if _is_macos:
-            p = sp.Popen(['afplay', '-q', '1', sound_file])
+            cmd = f'afplay -q 1 "{sound_file}"'
+            p = sp.Popen(shlex.split(cmd))
+    start_time = time.time()
     try:
         for frame in ascii_frames:
             # go to the row=1,col=1 cell
