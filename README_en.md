@@ -48,7 +48,7 @@ Then open the json file, modify it accordingly, then execute `python ascii_anima
 ```
 
 For the `frames_output_width` and `frames_output_height`, the simplest way to do this is setting `frames_output_width` to `-1`,
-and setting ``frames_output_height` to the number of rows of the ASCII animation (or the number of rows of your terminal/console).
+and setting `frames_output_height` to the number of rows of the ASCII animation (or the number of rows of your terminal/console).
 
 ## Command Line Parameters
 
