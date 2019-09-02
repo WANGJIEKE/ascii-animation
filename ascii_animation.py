@@ -187,86 +187,9 @@ def play_ascii_frames_with_sound(ascii_frames: List[List[str]], frame_rate: floa
         for frame in ascii_frames:
             # go to the row=1,col=1 cell
             print('\x1b[;H', end='')
-            print(*frame, sep='\n')
+            print(*frame, sep='\n', end='')
             time.sleep(frame_len - ((time.time() - start_time) % frame_len))
     finally:  # send SIGTERM to child process when finish
         if _is_macos:
             p.terminate()
             p.wait()
-
-
-def _ensure_directories_exist(path_str: str, is_dir: bool) -> Path:
-    """Ensure given path's parents are existed
-
-    :param path_str: path
-    :param is_dir: bool indicating if path is a directory
-    :return: a corresponding Path object
-    """
-    p = Path(path_str)
-    if is_dir:
-        p.mkdir(parents=True, exist_ok=True)
-    else:
-        Path(p.parent).mkdir(parents=True, exist_ok=True)
-    return p
-
-
-if __name__ == "__main__":
-    import argparse
-    parser = argparse.ArgumentParser(epilog='Go to https://github.com/WANGJIEKE/ascii-animation for more details')
-    parser.add_argument('-c', '--json-config', help='path to config.json file', default='./config.json')
-    parser.add_argument(
-        '-o',
-        '--overwrite-existing-files',
-        help='overwrite existing files (add -y option to ffmpeg)',
-        action='store_true'
-    )
-    parser.add_argument('-b', '--is-building', help='build ascii frames and store them', action='store_true')
-    parser.add_argument('-r', '--is-running', help='play frames', action='store_true')
-    args = parser.parse_args()
-
-    if not (args.is_building or args.is_running):
-        parser.error('No action requested.\n\t' \
-            'Set -b for building frames, -r for playing frames, or set both')
-
-    with open(args.json_config, 'r') as file:
-        params = json.load(file)
-    try:
-        input_file = Path(os.path.expanduser(params['input_file']))
-        sound_out = _ensure_directories_exist(os.path.expanduser(params['sound_output_file']), False)
-        frames_output_directory = _ensure_directories_exist(os.path.expanduser(params['frames_output_directory']), True)
-        json_output_file = _ensure_directories_exist(os.path.expanduser(params['json_output_file']), False)
-
-        if int(params['custom_fps']) > 0:
-            frame_rate = int(params['custom_fps'])
-            new_video_path = _ensure_directories_exist(f'{input_file}.{frame_rate}.mp4')
-            change_frame_rate(
-                input_file,
-                new_video_path,
-                frame_rate,
-                params['ffmpeg_executable'],
-                args.overwrite_existing_files
-            )
-            params['input_file'] = new_video_path
-        else:
-            frame_rate = get_frame_rate(input_file, params['ffprob_executable'])
-
-        if args.is_building:
-            extract_audio(input_file, sound_out, params['ffmpeg_executable'], args.overwrite_existing_files)
-            extract_grayscale_frames(
-                input_file,
-                frames_output_directory,
-                params['frames_output_format'],
-                (params['frames_output_width'], params['frames_output_height']),
-                params['ffmpeg_executable'],
-                args.overwrite_existing_files
-            )
-            frames = images_to_ascii_frames(frames_output_directory, params['ascii_mapping'])
-            save_data_to_json(json_output_file, frames, frame_rate)
-
-        if args.is_running:
-            if not args.is_building:
-                frames = load_data_from_json(os.path.expanduser(params['json_output_file']))['frames']
-            play_ascii_frames_with_sound(frames, frame_rate, os.path.expanduser(params['sound_output_file']))
-
-    except KeyError as e:
-        raise ValueError(f'required parameter `{e.args[0]}` is missing') from e
